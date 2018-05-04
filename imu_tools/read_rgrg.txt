@@ -1,0 +1,12 @@
+
+put the folder imu_tools inside ros_ws/src
+
+$ mv imu_tools ~/ros_ws/src/
+$ cd ~/ros_ws
+$ catkin_make
+
+run filter 
+$ rosrun imu_madgwik_filter imu_filter_node
+
+Please note: Do not loop the rosbag while keeping the filter running. 
+Everytime you run a rosbag, the filter needs to be started afresh. It has got to do with how the filter initializes and converges.

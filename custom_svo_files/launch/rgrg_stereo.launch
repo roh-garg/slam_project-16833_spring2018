@@ -1,0 +1,17 @@
+<launch>
+  <!-- SVO -->
+  <node pkg="svo_ros" type="svo_node" name="svo" clear_params="true" output="screen">
+    <!-- Camera and IMU topics to subscribe to -->
+    <param name="cam0_topic" value="/narrow_stereo/left/image_raw" type="str" />
+    <param name="cam1_topic" value="/narrow_stereo/right/image_raw" type="str" />
+    <param name="imu_topic" value="/epson_g364/imu" type="str" />
+    <param name="calib_file" value="$(find svo_ros)/calib/rgrg_stereo_imu.yaml" type="str" />
+
+    <rosparam file="$(find svo_ros)/param/rgrg_stereo.yaml" />
+
+  </node>
+
+  <!-- RVIZ + SVO GUI -->
+  <node name="vis" pkg="rviz" type="rviz" args=" -d $(find svo_ros)/rviz_config.rviz" />
+  <node name="svo_gui" pkg="rqt_gui" type="rqt_gui" args="-s rqt_svo.svo.Svo --args --topic svo" />
+</launch>

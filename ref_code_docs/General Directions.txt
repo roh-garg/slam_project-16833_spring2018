@@ -1,0 +1,32 @@
+General Directions:
+
+
+1. Set simulation time  
+$ rosparam set /use_sim_time true
+
+Check if it has been set by:
+$ rosparam check /use_sim_time
+
+**********some rosbag commands****************
+
+simple playback
+$ rosbag play /path/to/rosbag/1.bag --clock
+
+looping
+$ rosbag play /path/to/rosbag/1.bag --clock -l
+
+reduced play rate (0.5) + looping
+$ rosbag play /path/to/rosbag/1.bag -r 0.5 -l --clock
+
+start time + until (duration in sec)
+$ rosbag play /path/to/rosbag/1.bag -s 5 -u 10 --clock
+
+
+***********Launch File*************************
+
+Use this launch file to produce pointcloud and filter the imu values
+$ roslaunch stereo_img_proc.launch
+
+Use 
+$ rostopic list
+to check all the published topics
