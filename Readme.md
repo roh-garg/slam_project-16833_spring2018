@@ -2,15 +2,15 @@
 The code builds a map using pose information from SVO odometry and does fusion and finer pointcloud alignment using ICP.
 
 # Installation
-## Prerequisite Libraries
+1. Prerequisite Libraries
 * [point cloud library with version 1.5](http://pointclouds.org/).
 * [pcl_ros](http://wiki.ros.org/pcl)
 * [stereo_img_proc](http://wiki.ros.org/stereo_image_proc)
 * imu_tools
 	* The imu_tools package is same as the default one available for ROS. Except that it is modified to subscribe to /epson_g364/imu topic.
 
-## Build 
-### There are two folders: icp and transform. Please build them separately.
+2. Build 
+* There are two folders: icp and transform. Please build them separately.
 ```
 cd /path/to/icp/ OR cd /path/to/transform
 mkdir build
@@ -99,14 +99,14 @@ This should launch RVIZ and an SVO console that displays the number of tracked f
 rosbag play 5_full.bag -r 0.5 -u 9 --clock
 ```
 
+
 ## Some rosbag commands that might be helpful
-### Rosbag Record
+1. Recording relevant data published by SVO and the raw bag file:
 ```
 rosbag record /narrow_stereo/left/image_raw /epson_g364/imu /points2 /svo/pose_cam/0 /svo/pose_imu /svo/points /svo/loop_closures /initialpose /tf /tf_static
 ```
 
-### Rosbag play
-playing a rosbag from a pcd file at a rate of 1Hz publishing to the odom frame:
+2. playing a rosbag from a pcd file at a rate of 1Hz publishing to the odom frame:
 ```
 rosrun pcl_ros pcd_to_pointcloud iter30_80.pcd 1.0 _frame_id:=/odom
 ```
