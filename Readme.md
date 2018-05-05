@@ -10,7 +10,7 @@ The code builds a map using pose information from SVO odometry and does fusion a
 		* The imu_tools package is same as the default one available for ROS. Except that it is modified to subscribe to /epson_g364/imu topic.
 
 2. Build 
-* There are two folders: icp and transform. Please build them separately.
+	* There are two folders: icp and transform. Please build them separately.
 ```
 cd /path/to/icp/ OR cd /path/to/transform
 mkdir build
@@ -20,17 +20,17 @@ make
 ```
 
 # Run Instruction
-## transform part
-1. roslaunch launch/stereo_img_proc.launch (will launch `stereo_image_proc` and `imu_filter_madgwick` nodes with a custom parameter configuration). Although, madgwik filter is no longer needed as SVO takes in raw imu data. It's still there in the launch file as an option. 
-2. roslaunch svo launch file (eg. rgrg_stereo.launch)
+## Transform part
+1. `roslaunch launch/stereo_img_proc.launch` (will launch `stereo_image_proc` and `imu_filter_madgwick` nodes with a custom parameter configuration). Although, madgwik filter is no longer needed as SVO takes in raw imu data. It's still there in the launch file as an option. 
+2. `roslaunch svo_launch_file` (eg. rgrg_stereo.launch)
 3. Play rosbag. The rosbag requires the following topics:  
 	`/narrow_stereo/left/image_raw`  
 	`/narrow_stereo/left/camera_info`  
 	`/narrow_stereo/right/image_raw`  
 	`/narrow_stereo/right/camera_info`  
 	`/epson_g364/imu`
-4. cd /path/to/transform/build
-5. ./transform
+4. `cd /path/to/transform/build`
+5. `./transform`
 6. transform needs /points2 and /epson_g364/imu to register the point clouds. It publishes them to /transform/points2 as well as writes each pointcloud to a pcd within the build folder.
 
 ##ICP part
@@ -83,14 +83,12 @@ You can copy the custom files in the custom_svo_files folder into the respective
 ## How to run SVO
 1. Follow the installation instructions in the install.pdf you will find after extracting svo_binaries_1604_kinetic.zip.
 2. After you have setup the two workspaces, use the custom folders as listed above to use the calibration and launch files.
-
 3. After you have put the files in their respective folders.
 4. Start the terminal:
 ```
 cd /path/to/svo_install_overlay_ws/src/rpg_svo_example/svo_ros/launch
 roslaunch rgrg_stereo.launch
 ```
-
 5. This should launch RVIZ and an SVO console that displays the number of tracked features. Then play the rosbag from the data folder.
 ``` 
 rosparam set /use_sim_time true
@@ -103,7 +101,6 @@ rosbag play 5_full.bag -r 0.5 -u 9 --clock
 ```
 rosbag record /narrow_stereo/left/image_raw /epson_g364/imu /points2 /svo/pose_cam/0 /svo/pose_imu /svo/points /svo/loop_closures /initialpose /tf /tf_static
 ```
-
 2. playing a rosbag from a pcd file at a rate of 1Hz publishing to the odom frame:
 ```
 rosrun pcl_ros pcd_to_pointcloud iter30_80.pcd 1.0 _frame_id:=/odom
