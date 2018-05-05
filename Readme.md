@@ -80,16 +80,16 @@ You can copy the custom files in the custom_svo_files folder into the respective
 		* rgrg_stereo.launch
 
 
-## How to run SVO
-1. Follow the installation instructions in the install.pdf you will find after extracting svo_binaries_1604_kinetic.zip.
-2. After you have setup the two workspaces, use the custom folders as listed above to use the calibration and launch files.
-3. After you have put the files in their respective folders.
-4. Start the terminal:
+##How to run SVO
+* Follow the installation instructions in the install.pdf you will find after extracting svo_binaries_1604_kinetic.zip.
+* After you have setup the two workspaces, use the custom folders as listed above to use the calibration and launch files.
+* After you have put the files in their respective folders.
+* Start the terminal:
 ```
 cd /path/to/svo_install_overlay_ws/src/rpg_svo_example/svo_ros/launch
 roslaunch rgrg_stereo.launch
 ```
-5. This should launch RVIZ and an SVO console that displays the number of tracked features. Then play the rosbag from the data folder.
+* This should launch RVIZ and an SVO console that displays the number of tracked features. Then play the rosbag from the data folder.
 ``` 
 rosparam set /use_sim_time true
 rosbag play 5_full.bag -r 0.5 -u 9 --clock
@@ -97,11 +97,11 @@ rosbag play 5_full.bag -r 0.5 -u 9 --clock
 
 
 ###Some rosbag commands that might be helpful
-1. Recording relevant data published by SVO and the raw bag file:
+* Recording relevant data published by SVO and the raw bag file:
 ```
 rosbag record /narrow_stereo/left/image_raw /epson_g364/imu /points2 /svo/pose_cam/0 /svo/pose_imu /svo/points /svo/loop_closures /initialpose /tf /tf_static
 ```
-2. playing a rosbag from a pcd file at a rate of 1Hz publishing to the odom frame:
+* playing a rosbag from a pcd file at a rate of 1Hz publishing to the odom frame:
 ```
 rosrun pcl_ros pcd_to_pointcloud iter30_80.pcd 1.0 _frame_id:=/odom
 ```
