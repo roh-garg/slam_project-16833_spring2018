@@ -1,5 +1,5 @@
 # Introduction
-The code builds a map using pose information from SVO odometry and ICP.
+The code builds a map using pose information from SVO odometry and does fusion and finer pointcloud alignment using ICP.
 
 # Installation
 ## Prerequisite Libraries
@@ -12,6 +12,7 @@ The code builds a map using pose information from SVO odometry and ICP.
 ## Build 
 ### There are two folders: icp and transform. Please build them separately.
 ```
+cd /path/to/icp/ OR cd /path/to/transform
 mkdir build
 cd build
 cmake -D CMAKE_BUILD_TYPE=RELEASE ..
@@ -19,16 +20,27 @@ make
 ```
 
 # Run Instruction
-
-1. roslaunch launch/stereo_img_proc.launch (will launch `stereo_image_proc` and `imu_filter_madgwick` nodes with a custom parameter configuration) 
-2. Play rosbag. The rosbag requires the following topics:  
+## transform part
+1. roslaunch launch/stereo_img_proc.launch (will launch `stereo_image_proc` and `imu_filter_madgwick` nodes with a custom parameter configuration). Although, madgwik filter is no longer needed as SVO takes in raw imu data. It's still there in the launch file as an option. 
+2. roslaunch svo launch file (eg. rgrg_stereo.launch)
+3. Play rosbag. The rosbag requires the following topics:  
 `/narrow_stereo/left/image_raw`  
 `/narrow_stereo/left/camera_info`  
 `/narrow_stereo/right/image_raw`  
 `/narrow_stereo/right/camera_info`  
-`/epson_g364/imu`  
+`/epson_g364/imu`
+4. cd /path/to/transform/build
+5. ./transform
+transform needs /points2 and /epson_g364/imu to register the point clouds. It publishes them to /transform/points2 as well as writes each pointcloud to a pcd within the build folder.
 
-# More
+## icp part
+1. Use the cpp to fuse all the transformed pcd files to a single pcd.
+
+## LZ evaluation part
+1. Use the landing zone evaluation code to post process the fused map pcd file.
+  
+
+## More on the Madgwik Filter (although it is not being used right now)
 * Put the folder imu_tools inside ros_ws/src
 ```
 mv imu_tools ~/ros_ws/src/
@@ -45,11 +57,11 @@ rosrun imu_madgwik_filter imu_filter_node
 
 
 #SVO Tips:
+You can copy the custom files in the custom_svo_files folder into the respective folders of your built svo workspaces.
 
 ##folder paths
 
-###1
-calib
+1. calib
 /path/to/svo_install_overlay_ws/src/rpg_svo_example/svo_ros
 
 This is the folder that is supposed to contain the calibration file of the cameras/imu used to collect data
@@ -57,21 +69,18 @@ Custom Files:
 rgrg_stereo.yaml --> the file you will find by default in calib/ is from the 29April2018_calib_1280x1024 folder.
 Use that for the 29April2018 data.
 
-###2
-scripts
+2. scripts
 /path/to/svo_install_overlay_ws/src/rpg_svo_example/svo_ros
 
 This is the folder that converts the kalibr format calibration files into a format that SVO uses. Use the py script to do the conversion and copy the output to the calib folder. It's already been done in this case.
 
 
-###3
-launch
+3. launch
 /path/to/svo_install_overlay_ws/src/rpg_svo_example/svo_ros
 
 This is the folder that has the launch file used to run the algorithm. 
 Custom files:
 rgrg_stereo.launch
-
 
 
 ## How to run SVO
@@ -90,11 +99,14 @@ This should launch RVIZ and an SVO console that displays the number of tracked f
 rosbag play 5_full.bag -r 0.5 -u 9 --clock
 ```
 
-##Rosbag Record
+## Some rosbag commands that might be helpful
+### Rosbag Record
+```
 rosbag record /narrow_stereo/left/image_raw /epson_g364/imu /points2 /svo/pose_cam/0 /svo/pose_imu /svo/points /svo/loop_closures /initialpose /tf /tf_static
+```
 
-##Rosbag play
-playing a rosbag from a pcd file
+### Rosbag play
+playing a rosbag from a pcd file at a rate of 1Hz publishing to the odom frame:
 ```
 rosrun pcl_ros pcd_to_pointcloud iter30_80.pcd 1.0 _frame_id:=/odom
 ```
