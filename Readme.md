@@ -1,6 +1,9 @@
 # Introduction
 The code builds a map using pose information from SVO odometry and does fusion and finer pointcloud alignment using ICP.
 
+# Dataset Files:
+* Box link (CMU users only): https://cmu.box.com/s/c14tstdgxfnqcauzv223pi4212uoi2tl
+
 # Installation
 1. Prerequisite Libraries
 	* [point cloud library with version 1.5](http://pointclouds.org/).
